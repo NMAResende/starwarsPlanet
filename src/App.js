@@ -1,12 +1,27 @@
-import React from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import './App.css';
 import Header from './components/Header';
+import Table from './components/Table';
+import StarWarsContext from './context/StarWarsContext';
+import requestAPI from './services/RequestAPI';
 
 function App() {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    requestAPI().then((result) => setData(result));
+  }, []);
+
+  const value = useMemo(() => ({
+    data,
+  }), [data]);
   return (
     <div>
-      <span>Star Wars</span>
-      <Header />
+      <StarWarsContext.Provider value={ value }>
+        <span>Star Wars</span>
+        <Header />
+        <Table />
+      </StarWarsContext.Provider>
     </div>
   );
 }
