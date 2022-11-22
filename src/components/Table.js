@@ -1,32 +1,47 @@
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import StarWarsContext from '../context/StarWarsContext';
 
 export default function Table() {
-  const { data } = useContext(StarWarsContext);
+  const { data, filters } = useContext(StarWarsContext);
+  const [search, setSearch] = useState([]);
+
+  const filterName = () => {
+    const dataFilter = data.filter((el) => el.name.toUpperCase()
+      .includes(filters.toUpperCase()));
+    setSearch(dataFilter);
+  };
+
+  useEffect(() => {
+    setSearch(data);
+    if (filters.length > 0) {
+      filterName();
+    }
+  }, [data, filters]);
+
   return (
-    <table>
-      <thead>
-        <tr>
-          <td>Nome</td>
-          <td>Rotation Period</td>
-          <td>Orbital Period</td>
-          <td>Diameter</td>
-          <td>Climate</td>
-          <td>Gravity</td>
-          <td>Terrain</td>
-          <td>Surface water</td>
-          <td>Population</td>
-          <td>Films</td>
-          <td>Created</td>
-          <td>Edited</td>
-          <td>Url</td>
-        </tr>
-      </thead>
-      <tbody>
-        {
-          data.length === 0 ? <span>Nada Encontrado</span>
-            : data.map((el) => (
-              <tr key={ el.id }>
+    <div>
+      <table>
+        <thead>
+          <tr>
+            <th>Nome</th>
+            <th>Rotation Period</th>
+            <th>Orbital Period</th>
+            <th>Diameter</th>
+            <th>Climate</th>
+            <th>Gravity</th>
+            <th>Terrain</th>
+            <th>Surface water</th>
+            <th>Population</th>
+            <th>Films</th>
+            <th>Created</th>
+            <th>Edited</th>
+            <th>Url</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            search.map((el) => (
+              <tr key={ el.name }>
                 <td>{el.name}</td>
                 <td>{el.rotation_period}</td>
                 <td>{el.orbital_period}</td>
@@ -36,14 +51,15 @@ export default function Table() {
                 <td>{el.terrain}</td>
                 <td>{el.surface_water}</td>
                 <td>{el.population}</td>
-                <td>{el.films}</td>
+                <td>{el.films.map((movie) => movie)}</td>
                 <td>{el.created}</td>
                 <td>{el.edited}</td>
                 <td>{el.url}</td>
               </tr>
             ))
-        }
-      </tbody>
-    </table>
+          }
+        </tbody>
+      </table>
+    </div>
   );
 }

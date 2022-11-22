@@ -7,6 +7,7 @@ import requestAPI from './services/RequestAPI';
 
 function App() {
   const [data, setData] = useState([]);
+  const [filters, setFilters] = useState('');
 
   useEffect(() => {
     requestAPI().then((result) => setData(result));
@@ -14,7 +15,10 @@ function App() {
 
   const value = useMemo(() => ({
     data,
-  }), [data]);
+    filters,
+    setFilters,
+  }), [data, filters, setFilters]);
+
   return (
     <div>
       <StarWarsContext.Provider value={ value }>

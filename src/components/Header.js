@@ -1,24 +1,45 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
+import StarWarsContext from '../context/StarWarsContext';
 
 function Header() {
+  const [inputs, setInputs] = useState({
+    search: '',
+    column: 'population',
+    operator: 'maior que',
+    number: 0,
+    order: '',
+  });
+
+  const { setFilters } = useContext(StarWarsContext);
+
   const handleChange = ({ target }) => {
     setInputs({ ...inputs, [target.name]: target.value });
   };
 
+  const handleClick = () => {
+    setFilters(inputs);
+  };
+
   return (
     <div>
+      <label htmlFor="search">
+        <input
+          data-testid="name-filter"
+          type="text"
+          name="search"
+          id="search"
+          onChange={ (e) => setFilters(e.target.value) }
+        />
+      </label>
       <form>
-        <label htmlFor="search">
-          <input
-            type="text"
-            name="search"
-            id="search"
-            onChange={ handleChange }
-          />
-        </label>
         <label htmlFor="column">
           Coluna
-          <select name="column" id="column" onChange={ handleChange }>
+          <select
+            name="column"
+            id="column"
+            data-testid="column-filter"
+            onChange={ handleChange }
+          >
             <option value="population" name="column">population</option>
             <option value="orbital_period" name="column">orbital_period</option>
             <option value="diameter" name="column">diameter</option>
@@ -27,8 +48,13 @@ function Header() {
           </select>
         </label>
         <label htmlFor="operator">
-          Episódios:
-          <select id="operator" name="operator" onChange={ handleChange }>
+          Operador
+          <select
+            id="operator"
+            name="operator"
+            data-testid="comparison-filter"
+            onChange={ handleChange }
+          >
             <option value="maior que">maior que</option>
             <option value="menor que">menor que</option>
             <option value="igual a">igual a</option>
@@ -39,10 +65,18 @@ function Header() {
             type="number"
             name="number"
             id="number"
+            data-testid="value-filter"
             onChange={ handleChange }
           />
         </label>
-        <button type="button" onClick={ () => {} }>Filtrar</button>
+        <button
+          type="button"
+          data-testid="button-filter"
+          onClick={ handleClick }
+        >
+          Filtrar
+
+        </button>
         <label htmlFor="order">
           Ordernar
           <select name="order" id="order" onChange={ handleChange }>
