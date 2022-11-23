@@ -14,6 +14,8 @@ function App() {
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState('');
   const [search, setSearch] = useState([]);
+  const [columnFilter, setColumnFilter] = useState([]);
+  const [saveFilter, setSaveFilter] = useState([]);
 
   useEffect(() => {
     requestAPI().then((result) => setData(result));
@@ -27,7 +29,13 @@ function App() {
     setInputs,
     search,
     setSearch,
-  }), [data, filter, setFilter, inputs, setInputs, search, setSearch]);
+    columnFilter,
+    setColumnFilter,
+    saveFilter,
+    setSaveFilter,
+  }), [data, filter, setFilter, inputs,
+    setInputs, search, setSearch, columnFilter, setColumnFilter,
+    saveFilter, setSaveFilter]);
 
   return (
     <div>

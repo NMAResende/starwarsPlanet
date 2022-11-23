@@ -1,11 +1,31 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import StarWarsContext from '../context/StarWarsContext';
 
 function Header() {
-  const { setFilter, inputs, setInputs, setSearch, search } = useContext(StarWarsContext);
+  const { setFilter, inputs, setInputs, setSearch, search,
+    columnFilter, setColumnFilter, saveFilter,
+    setSaveFilter } = useContext(StarWarsContext);
+
+  useEffect(() => {
+    setColumnFilter([
+      'population',
+      'orbital_period',
+      'diameter',
+      'rotation_period',
+      'surface_water',
+    ]);
+  }, []);
 
   const handleChange = ({ target }) => {
     setInputs({ ...inputs, [target.name]: target.value });
+  };
+
+  const handleColumnRemove = () => {
+    // const newFilters = [...saveFilter, inputs];
+    setSaveFilter([...saveFilter, inputs]);
+    const remove = columnFilter.filter((el) => el !== inputs.column);
+    //! columnFilter.some((c) => c === el.column
+    setColumnFilter(remove);
   };
 
   const handleButtonClick = () => {
@@ -23,6 +43,7 @@ function Header() {
         .column]) === Number(inputs.number)));
       break;
     }
+    handleColumnRemove();
   };
 
   return (
@@ -47,11 +68,11 @@ function Header() {
             data-testid="column-filter"
             onChange={ handleChange }
           >
-            <option value="population" name="column">population</option>
-            <option value="orbital_period" name="column">orbital_period</option>
-            <option value="diameter" name="column">diameter</option>
-            <option value="rotation_period" name="column">rotation_period</option>
-            <option value="surface_water" name="column">surface_water</option>
+            {
+              columnFilter.map((el) => (
+                <option key={ el } value={ el }>{ el }</option>
+              ))
+            }
           </select>
         </label>
         <label htmlFor="operator">

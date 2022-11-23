@@ -1,7 +1,8 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import React from 'react';
 import App from '../App';
+import mockData from './mockData';
 
 describe('Testando a aplicação Star Wars', () => {
   test('Verificar se o texto Star Wars esta impresso na tela', () => {
@@ -40,38 +41,63 @@ describe('Testando a aplicação Star Wars', () => {
     render(<App />);
 
     const buttonFilter = screen.getByRole('button', { name: /Filtrar/i });
-
     expect(buttonFilter).toBeInTheDocument();
   });
 
-  test('Verificar se existe uma tabela impresa na tela', () => {
+  test('Verificando a requisição da API com renderização da tabela', async () => {
+
+    global.fetch = jest.fn(() => Promise.resolve({
+      json: () => Promise.resolve(mockData),
+    }));
+
     render(<App />);
-    const name = screen.getAllByText(/Name/i);
-    const rotationPeriod = screen.getAllByText(/Rotation Period/i);
-    const orbitalPeriod = screen.getAllByText(/Orbital Period/i);
-    const diameter = screen.getAllByText(/Diameter/i);
-    const climate = screen.getAllByText(/Climate/i);
-    const gravity = screen.getAllByText(/Gravity/i);
-    const terrain = screen.getAllByText(/Terrain/i);
-    const surfaceWater = screen.getAllByText(/Surface water/i);
-    const population = screen.getAllByText(/Population/i);
-    const films = screen.getAllByText(/Films/i);
-    const created = screen.getAllByText(/Created/i);
-    const edited = screen.getAllByText(/Edited/i);
-    const url = screen.getAllByText(/Url/i);
-    
-    userEvent.type(name, 'Tatooine');
-    userEvent.type(rotationPeriod, '23');
-    userEvent.type(orbitalPeriod, '304');
-    userEvent.type(diameter, '10465');
-    userEvent.type(climate, 'arid');
-    userEvent.type(gravity, '1');
-    userEvent.type(terrain, 'desert');
-    userEvent.type(surfaceWater, '1');
-    userEvent.type(population, '200000');
-    userEvent.type(films, 'https://swapi.dev/api/films/1/https://swapi.dev/api/films/3/https://swapi.dev/api/films/4/https://swapi.dev/api/films/5/https://swapi.dev/api/films/6/	');
-    userEvent.type(created, '2014-12-09T13:50:49.641000Z');
-    userEvent.type(edited, '2014-12-20T20:58:18.411000Z');
-    userEvent.type(url, 'https://swapi.dev/api/planets/1/');
+
+    expect(global.fetch).toHaveBeenCalledTimes(1);
+    expect(global.fetch).toHaveBeenCalledWith(
+      'https://swapi.dev/api/planets');
+
+      await waitFor(() => {
+        const renderTable = screen.findByRole('table');
+        expect(renderTable).toBeVisible();
+      })
   });
+
+  // test('Verificar se existe um filtro de Nome', async () => {
+
+  //   global.fetch = jest.fn(() => Promise.resolve({
+  //     json: () => Promise.resolve(mockData),
+  //   }));
+
+  //   render(<App />);
+
+  //   await waitFor(() => {
+  //     const filterName = screen.getByTestId('name-filter');
+  //     userEvent.type(filterName, '0');
+  //     const name = screen.getByText(/Hoth/i)
+  //     expect(name).toBeInTheDocument();
+  //   })
+  // });
+
+  // test('Verificar se existe um filtro de seletores', async () => {
+
+  //   global.fetch = jest.fn(() => Promise.resolve({
+  //     json: () => Promise.resolve(mockData),
+  //   }));
+
+  //   render(<App />);
+
+  //   const filterColumn = screen.getByTestId('column-filter');
+  //   userEvent.selectOptions(filterColumn, 'population');
+  //   expect(filterColumn).toBeInTheDocument();
+  //   const filterOperator = screen.getByTestId('comparison-filter');
+  //   userEvent.selectOptions(filterOperator, 'maior que');
+  //   expect(filterOperator).toBeInTheDocument();
+  //   const filterNumber = screen.getByTestId('value-filter');
+  //   userEvent.type(filterNumber, '0');
+  //   expect(filterNumber).toBeInTheDocument();
+  //   const buttonFilter = screen.getByRole('button', { name: /Filtrar/i });
+  //   userEvent.click(buttonFilter);
+  //   expect(buttonFilter).toBeInTheDocument();
+  // });
+
 });
