@@ -6,8 +6,14 @@ import StarWarsContext from './context/StarWarsContext';
 import requestAPI from './services/RequestAPI';
 
 function App() {
+  const [inputs, setInputs] = useState({
+    column: 'population',
+    operator: 'maior que',
+    number: 0,
+  });
   const [data, setData] = useState([]);
-  const [filters, setFilters] = useState('');
+  const [filter, setFilter] = useState('');
+  const [search, setSearch] = useState([]);
 
   useEffect(() => {
     requestAPI().then((result) => setData(result));
@@ -15,9 +21,13 @@ function App() {
 
   const value = useMemo(() => ({
     data,
-    filters,
-    setFilters,
-  }), [data, filters, setFilters]);
+    filter,
+    setFilter,
+    inputs,
+    setInputs,
+    search,
+    setSearch,
+  }), [data, filter, setFilter, inputs, setInputs, search, setSearch]);
 
   return (
     <div>

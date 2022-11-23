@@ -1,23 +1,22 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect } from 'react';
 import StarWarsContext from '../context/StarWarsContext';
 
 export default function Table() {
-  const { data, filters } = useContext(StarWarsContext);
-  const [search, setSearch] = useState([]);
+  const { data, filter, search, setSearch } = useContext(StarWarsContext);
 
   const filterName = () => {
     const dataFilter = data.filter((el) => el.name.toUpperCase()
-      .includes(filters.toUpperCase()));
-    setSearch(dataFilter);
+      .includes(filter.toUpperCase()));
+    if (filter.length > 0) {
+      setSearch(dataFilter);
+    } else {
+      setSearch(data);
+    }
   };
 
   useEffect(() => {
-    setSearch(data);
-    if (filters.length > 0) {
-      filterName();
-    }
-  }, [data, filters]);
-
+    filterName();
+  }, [data, filter]);
   return (
     <div>
       <table>

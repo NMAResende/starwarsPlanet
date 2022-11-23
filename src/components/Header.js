@@ -1,23 +1,28 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import StarWarsContext from '../context/StarWarsContext';
 
 function Header() {
-  const [inputs, setInputs] = useState({
-    search: '',
-    column: 'population',
-    operator: 'maior que',
-    number: 0,
-    order: '',
-  });
-
-  const { setFilters } = useContext(StarWarsContext);
+  const { setFilter, inputs, setInputs, setSearch, search } = useContext(StarWarsContext);
 
   const handleChange = ({ target }) => {
     setInputs({ ...inputs, [target.name]: target.value });
   };
 
-  const handleClick = () => {
-    setFilters(inputs);
+  const handleButtonClick = () => {
+    switch (inputs.operator) {
+    case 'maior que':
+      setSearch(search.filter((el) => Number(el[inputs
+        .column]) > Number(inputs.number)));
+      break;
+    case 'menor que':
+      setSearch(search.filter((el) => Number(el[inputs
+        .column]) < Number(inputs.number)));
+      break;
+    default:
+      setSearch(search.filter((el) => Number(el[inputs
+        .column]) === Number(inputs.number)));
+      break;
+    }
   };
 
   return (
@@ -28,7 +33,7 @@ function Header() {
           type="text"
           name="search"
           id="search"
-          onChange={ (e) => setFilters(e.target.value) }
+          onChange={ (e) => setFilter(e.target.value) }
         />
       </label>
       <form>
@@ -37,6 +42,7 @@ function Header() {
           <select
             name="column"
             id="column"
+            value={ inputs.column }
             data-testid="column-filter"
             onChange={ handleChange }
           >
@@ -52,6 +58,7 @@ function Header() {
           <select
             id="operator"
             name="operator"
+            value={ inputs.operator }
             data-testid="comparison-filter"
             onChange={ handleChange }
           >
@@ -65,6 +72,7 @@ function Header() {
             type="number"
             name="number"
             id="number"
+            value={ inputs.number }
             data-testid="value-filter"
             onChange={ handleChange }
           />
@@ -72,12 +80,11 @@ function Header() {
         <button
           type="button"
           data-testid="button-filter"
-          onClick={ handleClick }
+          onClick={ handleButtonClick }
         >
           Filtrar
-
         </button>
-        <label htmlFor="order">
+        {/* <label htmlFor="order">
           Ordernar
           <select name="order" id="order" onChange={ handleChange }>
             <option value="population" name="order">population</option>
@@ -86,7 +93,7 @@ function Header() {
             <option value="rotation_period" name="order">rotation_period</option>
             <option value="surface_water" name="order">surface_water</option>
           </select>
-        </label>
+        </label> */}
       </form>
     </div>
   );
