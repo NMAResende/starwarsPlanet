@@ -22,7 +22,7 @@ export default function Table() {
       <table>
         <thead>
           <tr>
-            <th>Nome</th>
+            <th>Name</th>
             <th>Rotation Period</th>
             <th>Orbital Period</th>
             <th>Diameter</th>

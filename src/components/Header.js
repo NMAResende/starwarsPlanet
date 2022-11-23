@@ -28,6 +28,7 @@ function Header() {
   return (
     <div>
       <label htmlFor="search">
+        Pesquisar planeta
         <input
           data-testid="name-filter"
           type="text"
