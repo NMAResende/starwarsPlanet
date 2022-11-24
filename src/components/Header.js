@@ -14,7 +14,7 @@ function Header() {
       'rotation_period',
       'surface_water',
     ]);
-  }, []);
+  }, [setColumnFilter]);
 
   const handleChange = ({ target }) => {
     setInputs({ ...inputs, [target.name]: target.value });
