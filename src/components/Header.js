@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import StarWarsContext from '../context/StarWarsContext';
 
 function Header() {
-  const { setFilter, inputs, setInputs, setSearch, search,
+  const { data, filter, setFilter, inputs, setInputs, setSearch, search,
     columnFilter, setColumnFilter, saveFilter,
     setSaveFilter } = useContext(StarWarsContext);
 
@@ -16,19 +16,7 @@ function Header() {
     ]);
   }, [setColumnFilter]);
 
-  const handleChange = ({ target }) => {
-    setInputs({ ...inputs, [target.name]: target.value });
-  };
-
-  const handleColumnRemove = () => {
-    // const newFilters = [...saveFilter, inputs];
-    setSaveFilter([...saveFilter, inputs]);
-    const remove = columnFilter.filter((el) => el !== inputs.column);
-    //! columnFilter.some((c) => c === el.column
-    setColumnFilter(remove);
-  };
-
-  const handleButtonClick = () => {
+  const handleSelect = () => {
     switch (inputs.operator) {
     case 'maior que':
       setSearch(search.filter((el) => Number(el[inputs
@@ -43,6 +31,40 @@ function Header() {
         .column]) === Number(inputs.number)));
       break;
     }
+  };
+
+  const handleChange = ({ target }) => {
+    setInputs({ ...inputs, [target.name]: target.value });
+  };
+
+  const handleColumnRemove = () => {
+    // const newFilters = [...saveFilter, inputs];
+    setSaveFilter([...saveFilter, inputs]);
+    const remove = columnFilter.filter((el) => el !== inputs.column);
+    //! columnFilter.some((c) => c === el.column
+    setColumnFilter(remove);
+  };
+
+  const handleRemoveFilter = () => {
+    const removeFilter = saveFilter.filter((e) => e !== inputs.column);
+    setSaveFilter(filter);
+    setColumnFilter(setSearch(removeFilter));
+  };
+
+  const handleRemoveAllFilters = () => {
+    setSaveFilter([]);
+    setColumnFilter([
+      'population',
+      'orbital_period',
+      'diameter',
+      'rotation_period',
+      'surface_water',
+    ]);
+    setSearch(data);
+  };
+
+  const handleButtonClick = () => {
+    handleSelect();
     handleColumnRemove();
   };
 
@@ -117,6 +139,28 @@ function Header() {
           </select>
         </label> */}
       </form>
+      <ul>
+        {
+          saveFilter.map((el, i) => (
+            <li key={ i } data-testid="filter">
+              <p>{`${el.column} ${el.operator} ${el.number}`}</p>
+              <button
+                type="button"
+                onClick={ handleRemoveFilter }
+              >
+                Delete
+              </button>
+            </li>
+          ))
+        }
+      </ul>
+      <button
+        type="button"
+        onClick={ handleRemoveAllFilters }
+        data-testid="button-remove-filters"
+      >
+        Delete all
+      </button>
     </div>
   );
 }

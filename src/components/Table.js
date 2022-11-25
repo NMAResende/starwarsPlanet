@@ -17,6 +17,7 @@ export default function Table() {
   useEffect(() => {
     filterName();
   }, [data, filter]);
+
   return (
     <div>
       <table>
@@ -50,7 +51,7 @@ export default function Table() {
                 <td>{el.terrain}</td>
                 <td>{el.surface_water}</td>
                 <td>{el.population}</td>
-                <td>{el.films.map((movie) => movie)}</td>
+                <td>{el.films.map((movie) => <div key={ movie }>movie</div>)}</td>
                 <td>{el.created}</td>
                 <td>{el.edited}</td>
                 <td>{el.url}</td>

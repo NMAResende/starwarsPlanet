@@ -23,6 +23,7 @@ function App() {
 
   const value = useMemo(() => ({
     data,
+    setData,
     filter,
     setFilter,
     inputs,
@@ -33,7 +34,7 @@ function App() {
     setColumnFilter,
     saveFilter,
     setSaveFilter,
-  }), [data, filter, setFilter, inputs,
+  }), [data, setData, filter, setFilter, inputs,
     setInputs, search, setSearch, columnFilter, setColumnFilter,
     saveFilter, setSaveFilter]);
 
