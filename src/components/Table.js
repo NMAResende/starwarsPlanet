@@ -24,7 +24,6 @@ export default function Table() {
           return +el[column] < +number;
         case 'maior que':
           return +el[column] > +number;
-
         case 'igual a':
           return +el[column] === +number;
         default:

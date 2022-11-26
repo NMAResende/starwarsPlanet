@@ -82,14 +82,14 @@ describe('Testando o fetch e as aplicações', () => {
     const operator = screen.getByTestId(operatorFilter);
     const number = screen.getByTestId(numberFilter);
     userEvent.selectOptions(column, orbitalPeriod);
-    userEvent.type(operator, 'menor que');
-    userEvent.type(number, '400');
+    userEvent.selectOptions(operator, 'menor que');
+    userEvent.type(number, '310');
     const buttonFilter = screen.getByRole('button', { name: /Filtrar/i });
     userEvent.click(buttonFilter);
 
     const tatooine = await screen.findByRole('cell', { name: /Tatooine/i });
     expect(tatooine).toBeInTheDocument();
-    expect(endor).not.toBeInTheDocument();
+    expect(endor).not.toBeVisible();
   });
 
   test('Verificar se existe um seletor menor que', async () => {
@@ -101,13 +101,37 @@ describe('Testando o fetch e as aplicações', () => {
     const operator = screen.getByTestId(operatorFilter);
     const number = screen.getByTestId(numberFilter);
     userEvent.selectOptions(column, orbitalPeriod);
-    userEvent.type(operator, 'igual a');
+    userEvent.selectOptions(operator, 'igual a');
     userEvent.type(number, '364');
     const buttonFilter = screen.getByRole('button', { name: /Filtrar/i });
     userEvent.click(buttonFilter);
 
     const alderaan = await screen.findByRole('cell', { name: /Alderaan/i });
     expect(alderaan).toBeInTheDocument();
-    expect(endor).not.toBeInTheDocument();
+    expect(endor).not.toBeVisible();
+  });
+
+  test('Verificar se existe um botão que deleta os filtros', async () => {
+    render(<App />);
+
+    const buttonFilter = screen.getByRole('button', { name: /Filtrar/i });
+    userEvent.click(buttonFilter);
+
+    const remove = screen.getAllByRole('button', { name: /Delete/i });
+    expect(remove[0]).toBeInTheDocument();
+    userEvent.click(remove[0]);
+    expect(remove[0]).not.toBeVisible();
+  });
+
+  test('Verificar se existe um botão que deleta todos os filtros', async () => {
+    render(<App />);
+
+    const buttonFilter = screen.getByRole('button', { name: /Filtrar/i });
+    userEvent.click(buttonFilter);
+
+    const removeAll = await screen.findByTestId('button-remove-filters');
+    expect(removeAll).toBeInTheDocument();
+    userEvent.click(removeAll);
+    expect(await screen.findByRole('table')).toBeInTheDocument();
   });
 });
