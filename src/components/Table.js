@@ -1,22 +1,44 @@
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import StarWarsContext from '../context/StarWarsContext';
 
 export default function Table() {
-  const { data, filter, search, setSearch } = useContext(StarWarsContext);
+  const { data, filter, saveFilter } = useContext(StarWarsContext);
 
-  const filterName = () => {
+  // const filterName = () => {
+  //   const dataFilter = data.filter((el) => el.name.toUpperCase()
+  //     .includes(filter.toUpperCase()));
+  //   if (filter.length > 0) {
+  //     setSearch(dataFilter);
+  //   } else {
+  //     setSearch(data);
+  //   }
+  // };
+
+  const allFilter = () => {
     const dataFilter = data.filter((el) => el.name.toUpperCase()
       .includes(filter.toUpperCase()));
-    if (filter.length > 0) {
-      setSearch(dataFilter);
-    } else {
-      setSearch(data);
-    }
+    const filterByNameAndNumber = dataFilter.filter((el) => {
+      const result = saveFilter.map(({ column, operator, number }) => {
+        switch (operator) {
+        case 'menor que':
+          return +el[column] < +number;
+        case 'maior que':
+          return +el[column] > +number;
+
+        case 'igual a':
+          return +el[column] === +number;
+        default:
+          return true;
+        }
+      });
+      return result.every((e) => e);
+    });
+    return filterByNameAndNumber;
   };
 
-  useEffect(() => {
-    filterName();
-  }, [data, filter]);
+  // useEffect(() => {
+  //   filterName();
+  // }, [data, filter]);
 
   return (
     <div>
@@ -40,7 +62,7 @@ export default function Table() {
         </thead>
         <tbody>
           {
-            search.map((el) => (
+            allFilter().map((el) => (
               <tr key={ el.name }>
                 <td>{el.name}</td>
                 <td>{el.rotation_period}</td>

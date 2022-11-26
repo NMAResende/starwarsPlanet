@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from 'react';
 import StarWarsContext from '../context/StarWarsContext';
 
 function Header() {
-  const { data, filter, setFilter, inputs, setInputs, setSearch, search,
+  const { data, setFilter, inputs, setInputs, setSearch, search,
     columnFilter, setColumnFilter, saveFilter,
     setSaveFilter } = useContext(StarWarsContext);
 
@@ -17,21 +17,51 @@ function Header() {
   }, [setColumnFilter]);
 
   const handleSelect = () => {
+    let filterByArray = data;
     switch (inputs.operator) {
     case 'maior que':
-      setSearch(search.filter((el) => Number(el[inputs
-        .column]) > Number(inputs.number)));
+      filterByArray = search.filter((el) => Number(el[inputs
+        .column]) > Number(inputs.number));
       break;
     case 'menor que':
-      setSearch(search.filter((el) => Number(el[inputs
-        .column]) < Number(inputs.number)));
+      filterByArray = search.filter((el) => Number(el[inputs
+        .column]) < Number(inputs.number));
       break;
     default:
-      setSearch(search.filter((el) => Number(el[inputs
-        .column]) === Number(inputs.number)));
+      filterByArray = search.filter((el) => Number(el[inputs
+        .column]) === Number(inputs.number));
       break;
     }
+    setSearch(filterByArray);
   };
+
+  // const handleSelectRemove = () => {
+  //   let filterByArray = data;
+  //   saveFilter.map(() => {
+  //     filterByArray = [];
+  //     switch (inputs.operator) {
+  //     case 'maior que':
+  //       filterByArray = data.filter((el) => Number(el[inputs
+  //         .column]) > Number(inputs.number));
+  //       break;
+  //     case 'menor que':
+  //       filterByArray = data.filter((el) => Number(el[inputs
+  //         .column]) < Number(inputs.number));
+  //       break;
+  //     case 'igual a':
+  //       filterByArray = data.filter((el) => Number(el[inputs
+  //         .column]) === Number(inputs.number));
+  //       break;
+  //     default:
+  //       break;
+  //     }
+  //     return filterByArray;
+  //   });
+  //   if (filterByArray.length > 0) {
+  //     return setSaveFilter(filterByArray);
+  //   }
+  //   return data;
+  // };
 
   const handleChange = ({ target }) => {
     setInputs({ ...inputs, [target.name]: target.value });
@@ -45,10 +75,11 @@ function Header() {
     setColumnFilter(remove);
   };
 
-  const handleRemoveFilter = () => {
-    const removeFilter = saveFilter.filter((e) => e !== inputs.column);
-    setSaveFilter(filter);
-    setColumnFilter(setSearch(removeFilter));
+  const handleRemoveFilter = (event) => {
+    setSaveFilter(saveFilter.filter((e) => e.column !== event.target.value));
+    // const removeFilter = saveFilter.filter((_e, index) => index !== i);
+    // setSaveFilter(removeFilter);
+    // handleSelectRemove();
   };
 
   const handleRemoveAllFilters = () => {
@@ -65,6 +96,8 @@ function Header() {
 
   const handleButtonClick = () => {
     handleSelect();
+    setSaveFilter([...saveFilter, inputs]);
+    setInputs({ ...inputs, column: columnFilter[0] });
     handleColumnRemove();
   };
 
@@ -146,6 +179,7 @@ function Header() {
               <p>{`${el.column} ${el.operator} ${el.number}`}</p>
               <button
                 type="button"
+                value={ el.column }
                 onClick={ handleRemoveFilter }
               >
                 Delete
