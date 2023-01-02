@@ -1,4 +1,5 @@
 import React, { useContext, useEffect } from 'react';
+import '../App.css';
 import StarWarsContext from '../context/StarWarsContext';
 
 function Header() {
@@ -103,22 +104,30 @@ function Header() {
 
   return (
     <div>
-      <label htmlFor="search">
+      <img
+        className="image"
+        src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/SW_opening_crawl_logo.svg/1200px-SW_opening_crawl_logo.svg.png"
+        alt="Star Wars"
+      />
+      <br />
+      <label htmlFor="search" className="labelSearch">
         Pesquisar planeta
         <input
           data-testid="name-filter"
           type="text"
           name="search"
           id="search"
+          className="search"
           onChange={ (e) => setFilter(e.target.value) }
         />
       </label>
-      <form>
-        <label htmlFor="column">
+      <form className="form">
+        <label htmlFor="column" className="labelColumn">
           Coluna
           <select
             name="column"
             id="column"
+            className="column"
             value={ inputs.column }
             data-testid="column-filter"
             onChange={ handleChange }
@@ -130,11 +139,12 @@ function Header() {
             }
           </select>
         </label>
-        <label htmlFor="operator">
+        <label htmlFor="operator" className="labelOperator">
           Operador
           <select
             id="operator"
             name="operator"
+            className="operator"
             value={ inputs.operator }
             data-testid="comparison-filter"
             onChange={ handleChange }
@@ -144,17 +154,19 @@ function Header() {
             <option value="igual a">igual a</option>
           </select>
         </label>
-        <label htmlFor="number">
+        <label htmlFor="number" className="labelNumber">
           <input
             type="number"
             name="number"
             id="number"
+            className="number"
             value={ inputs.number }
             data-testid="value-filter"
             onChange={ handleChange }
           />
         </label>
         <button
+          className="btnFilter"
           type="button"
           data-testid="button-filter"
           onClick={ handleButtonClick }
@@ -172,12 +184,13 @@ function Header() {
           </select>
         </label> */}
       </form>
-      <ul>
+      <ul className="filter">
         {
           saveFilter.map((el, i) => (
             <li key={ i } data-testid="filter">
               <p>{`${el.column} ${el.operator} ${el.number}`}</p>
               <button
+                className="delete"
                 type="button"
                 value={ el.column }
                 onClick={ handleRemoveFilter }
@@ -190,6 +203,7 @@ function Header() {
       </ul>
       <button
         type="button"
+        className="deleteAll"
         onClick={ handleRemoveAllFilters }
         data-testid="button-remove-filters"
       >

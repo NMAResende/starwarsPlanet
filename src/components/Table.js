@@ -1,4 +1,5 @@
 import { useContext } from 'react';
+import '../App.css';
 import StarWarsContext from '../context/StarWarsContext';
 
 export default function Table() {

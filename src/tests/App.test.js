@@ -4,12 +4,12 @@ import React from 'react';
 import App from '../App';
 
 describe('Testando a aplicação Star Wars', () => {
-  test('Verificar se o texto Star Wars esta impresso na tela', () => {
-    render(<App />);
-    const text = screen.getByText(/Star Wars/i);
+  // test('Verificar se o texto Projeto Star Wars esta impresso na tela', () => {
+  //   render(<App />);
+  //   const text = screen.getByText(/Projeto Star Wars/i);
 
-    expect(text).toBeInTheDocument();
-  });
+  //   expect(text).toBeInTheDocument();
+  // });
 
   test('Verificar se existe um input de pesquisa', () => {
     render(<App />);

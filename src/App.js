@@ -41,7 +41,7 @@ function App() {
   return (
     <div>
       <StarWarsContext.Provider value={ value }>
-        <span>Star Wars</span>
+        {/* <span className="starWars"> Projeto Star Wars</span> */}
         <Header />
         <Table />
       </StarWarsContext.Provider>
